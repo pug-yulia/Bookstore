@@ -17,6 +17,9 @@ import com.exercise.Bookstore.domain.Book;
 import com.exercise.Bookstore.domain.BookRepository;
 import com.exercise.Bookstore.domain.CategoryRepository;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 @Controller
 public class BookController {
 	@Autowired
@@ -26,10 +29,16 @@ public class BookController {
 	private CategoryRepository crepository;
 
 	@RequestMapping(value = { "/", "/booklist" })
-	public String bookList(Model model) {
-		model.addAttribute("books", repository.findAll());
-		return "booklist";
-	}
+    public String bookList(Model model) {
+        model.addAttribute("books", repository.findAll());
+
+        // Get the authenticated username
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        model.addAttribute("username", username);
+
+        return "booklist";
+    }
 	
 	// RESTful service to get all books
     @RequestMapping(value="/books", method = RequestMethod.GET)
@@ -81,6 +90,5 @@ public class BookController {
 	    repository.save(book);
 	    return "redirect:/booklist";
 	}
-
 
 }

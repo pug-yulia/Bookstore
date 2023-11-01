@@ -1,5 +1,7 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <head>
 <title>Booklist</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -8,7 +10,9 @@
 
 </head>
 <body>
-	<h1>Books</h1>
+	<h1>Books</h1> 
+	<p>Welcome, <span th:text="${username}"></span>!</p>
+	
 	<table class="table table-striped">
 		<tr>
 			<th>Title</th>
@@ -25,10 +29,17 @@
 			<td th:text="${book.isbn}"></td>
 			<td th:text="${book.price}"></td>
 			<td th:text="${book.category.name}"></td>
-			<td><a th:href="@{/edit/{id}(id=${book.id})}">Edit</a> <a
-				th:href="@{/delete/{id}(id=${book.id})}">Delete</a></td>
+			<td><div sec:authorize="hasRole('ADMIN')">
+					<a th:href="@{/edit/{id}(id=${book.id})}">Edit</a> <a
+						th:href="@{/delete/{id}(id=${book.id})}">Delete</a>
+				</div></td>
 		</tr>
 	</table>
-	<a href="/add" class="btn btn-success">Add Book</a>
+	<div sec:authorize="hasRole('ADMIN')">
+		<a href="/add" class="btn btn-success">Add Book</a>
+	</div>
+	<br/>
+	<a href="/logout">Logout</a>
+
 </body>
 </html>
